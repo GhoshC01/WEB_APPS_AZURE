@@ -20,14 +20,16 @@ jobs:
 
       - name: 📦 Install dependencies
         run: npm install
+        working-directory: vite-project
 
       - name: 🛠️ Build Vite App
         run: npm run build
+        working-directory: vite-project
 
       - name: 🚀 Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: nodeApp-9682                  # ✅ Azure Apps Name 
+          app-name: nodeApp-9682
           slot-name: production
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: vite-project/dist                         # ✅ Vite build folder
+          package: vite-project/dist
