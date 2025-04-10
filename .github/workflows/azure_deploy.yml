@@ -30,4 +30,4 @@ jobs:
           app-name: nodeApp-9682                  # ✅ Azure Apps Name 
           slot-name: production
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./dist                         # ✅ Vite build folder
+          package: vite-project/dist                         # ✅ Vite build folder
