@@ -1,4 +1,4 @@
-name: Azure React App Deploy
+name: Azure Vite React Deploy
 
 on:
   push:
@@ -6,16 +6,16 @@ on:
       - main
 
   pull_request:
+    types: [opened, synchronize, reopened]
     branches:
       - main
-    types: [opened, synchronize]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     steps:
-      - name: 📥 Checkout repository
+      - name: 📥 Checkout Code
         uses: actions/checkout@v3
 
       - name: 🟢 Setup Node.js
@@ -23,18 +23,18 @@ jobs:
         with:
           node-version: '20'
 
-      - name: 📦 Install dependencies
+      - name: 📦 Install Dependencies
         run: npm install
-        working-directory: vite-project
+        working-directory: ./vite-project
 
-      - name: 🛠️ Build React App
+      - name: 🛠️ Build App
         run: npm run build
-        working-directory: vite-project
+        working-directory: ./vite-project
 
-      - name: 🚀 Deploy to Azure Web App
+      - name: 🚀 Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
         with:
-          app-name: nodeApp-9682               # তোমার Azure App নাম
-          slot-name: production
+          app-name: nodeApp-9682
+          slot-name: ${{ github.ref_name == 'main' && 'production' || github.head_ref || github.ref_name }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: vite-project/dist
+          package: ./vite-project/dist
